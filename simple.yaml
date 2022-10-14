@@ -1,0 +1,38 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hello
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/knative-samples/helloworld-go
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TARGET
+              value: "World"
+            - name: HOST_PATH
+              value: "/bin"
+          volumeMounts:
+            - mountPath: /dasfasfasasf
+              name: kms-volume
+      volumes:
+        - name: kms-volume
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-host-mount
+spec:
+  containers:
+    - image: registry.access.redhat.com/ubi8/ubi
+      name: test-container
+      command: ['sh', '-c', 'sleep 3600']
+      volumeMounts:
+        - mountPath: /host
+          name: host-slash
+  volumes:
+    - name: host-slash
+      hostPath:
+        path: /bin
